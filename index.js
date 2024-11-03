@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 
 import { resolvers } from './graphql/resolvers.js'
 import { typeDefs } from './graphql/typeDefs.js'
+import { User } from './models/User.model.js'
 
 dotenv.config()
 const app = express()
