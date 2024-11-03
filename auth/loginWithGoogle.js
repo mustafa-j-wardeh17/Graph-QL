@@ -11,11 +11,25 @@ passport.use(new GoogleStrategy({
     callbackURL: process.env.GOOGLE_CALLBACK_URL
 },
     async function (accessToken, refreshToken, profile, done) {
+        const defaultUser = {
+            fullName: `${profile.name.givenName} ${profile.name.familyName}`,
+            email: profile.emails[0].value,
+            googleId: profile.id,
+            picture: profile.photos[0].value
+        }
+
         try {
-            console.log("Profile received", profile.id);
-            done(null, {
-                id: profile.id
+            // findOrCreate return array of users so just take user[0]
+            const user = await User.findOrCreate({
+                where: { googleId: defaultUser.googleId },
+                defaults: defaultUser
             })
+
+            if (!user) {
+                return done(new Error("something went wrong"), null)
+            }
+
+            done(null, user[0])
         } catch (err) {
             console.error(`Error in Google OAuth: ${err}`);
             return done(err);

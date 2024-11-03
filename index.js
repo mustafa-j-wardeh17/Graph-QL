@@ -46,7 +46,8 @@ app.use(cookieParser())
 //--------------------------------------
 app.use(cors({
     credentials: true,
-    methods: 'GET,POST,PATCH,DELETE'
+    methods: 'GET,POST,PATCH,DELETE',
+    maxAge: 24 * 60 * 60 * 1000 //1 day,
 }))
 
 
