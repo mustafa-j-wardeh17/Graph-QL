@@ -18,7 +18,10 @@ authRouter.get("/google/callback", passport.authenticate("google", {
     , async (req, res) => {
         try {
             const token = jwt.sign({ id: req.user.id }, process.env.JWT_SECRET_KEY, { expiresIn: '3d' })
-            res.cookie('token', token)
+            res.cookie('token', token, {
+                httpOnly: true,
+                sameSite: 'strict'
+            })
             res.redirect('http://localhost:3000/login/success')
         }
         catch (error) {

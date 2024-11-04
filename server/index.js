@@ -13,6 +13,7 @@ import * as google_Auth from './auth/loginWithGoogle.js'
 dotenv.config()
 const app = express()
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 const port = process.env.PORT || 5017
 
