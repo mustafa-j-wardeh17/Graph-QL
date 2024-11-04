@@ -3,7 +3,7 @@ export const typeDefs = `#graphql
         title: String
         author: String
     }
-    type User{
+    type User {
         fullName:String
         email:String
         password:String
