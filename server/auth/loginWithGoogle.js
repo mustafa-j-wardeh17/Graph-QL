@@ -28,7 +28,6 @@ passport.use(new GoogleStrategy({
             if (!user) {
                 return done(new Error("something went wrong"), null)
             }
-
             done(null, user[0])
         } catch (err) {
             console.error(`Error in Google OAuth: ${err}`);

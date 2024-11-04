@@ -46,11 +46,18 @@ app.use(cookieParser())
 //-----------------CORS-----------------
 //--------------------------------------
 app.use(cors({
+    origin:"http://localhost:3000",
     credentials: true,
     methods: 'GET,POST,PATCH,DELETE',
-    maxAge: 24 * 60 * 60 * 1000 //1 day,
+    maxAge
+    : 24 * 60 * 60 * 1000 //1 day,
 }))
-
+// Security Headers Middleware
+app.use((req, res, next) => {
+    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin'); // Adjust according to your needs
+    res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp'); // This may also be relevant
+    next();
+});
 
 
 //--------------------------------------
