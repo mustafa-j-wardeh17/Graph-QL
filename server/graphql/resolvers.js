@@ -45,6 +45,14 @@ export const resolvers = {
                 complete: args.complete
             })
             return newTodo
-        }
+        },
+        deleteTodo: async (root, args) => {
+            const newTodo = await Todo.destroy({
+                where: {
+                    id: args.id
+                }
+            })
+            return `${newTodo} deleted successfully`
+        },
     }
 }

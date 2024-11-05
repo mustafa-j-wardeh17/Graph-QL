@@ -27,5 +27,6 @@ export const typeDefs = `#graphql
 
     type Mutation {
         addTodo(title:String,description:String,date:Date,complete:Boolean):Todo
+        deleteTodo(id:ID):String
     }
 `
