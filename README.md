@@ -99,7 +99,7 @@ sequelize.sync({ force: false, alter: true })
 export { sequelize };
 ```
 
-## Setting Up Sequelize with PostgreSQL
+## Connecting Apollo Server
 
 To connect Apollo Server with your Express app, you can use the following code:
 
