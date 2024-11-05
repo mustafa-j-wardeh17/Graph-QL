@@ -22,11 +22,12 @@ export const typeDefs = `#graphql
         books:[Book]
         users:[User]
         getTodos:[Todo]
-        getTodo(id:ID):Todo
+        getTodo(id:ID!):Todo
     }
 
     type Mutation {
         addTodo(title:String,description:String,date:Date,complete:Boolean):Todo
-        deleteTodo(id:ID):String
+        deleteTodo(id:ID!):String
+        updateTodo(id:ID!,title:String,description:String,date:Date,complete:Boolean):Todo
     }
 `

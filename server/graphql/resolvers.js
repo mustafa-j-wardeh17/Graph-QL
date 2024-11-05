@@ -54,5 +54,17 @@ export const resolvers = {
             })
             return `${newTodo} deleted successfully`
         },
+        updateTodo: async (root, args) => {
+            const { id, title, description, complete, date } = args
+            const findTodo = await Todo.findByPk(id)
+            // update todo values
+            if (title !== undefined) findTodo.title = title
+            if (description !== undefined) findTodo.description = description
+            if (date !== undefined) findTodo.date = date
+            if (complete !== undefined) findTodo.complete = complete
+            await findTodo.save()
+
+            return findTodo
+        },
     }
 }
