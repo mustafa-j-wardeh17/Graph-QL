@@ -25,8 +25,8 @@ export const resolvers = {
             return todos
         },
         getTodo: async (root, args) => {
-            const todos = await Todo.findByPk(args.id)
-            return todos
+            const todo = await Todo.findByPk(args.id)
+            return todo
         },
         users: async () => {
             // call to database
