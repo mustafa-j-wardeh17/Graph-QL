@@ -12,59 +12,85 @@ const books = [
     }
 ];
 
-
 export const resolvers = {
     Query: {
         books: () => {
-            // call to database
-            // perform any operation
-            return books
+            return books;
         },
         getTodos: async () => {
-            const todos = await Todo.findAll()
-            return todos
+            try {
+                const todos = await Todo.findAll();
+                return todos;
+            } catch (error) {
+                console.error("Error fetching todos:", error);
+                throw new Error("Failed to fetch todos");
+            }
         },
         getTodo: async (root, args) => {
-            const todo = await Todo.findByPk(args.id)
-            return todo
+            try {
+                const todo = await Todo.findByPk(args.id);
+                if (!todo) throw new Error("Todo not found");
+                return todo;
+            } catch (error) {
+                console.error(`Error fetching todo with id ${args.id}:`, error);
+                throw new Error("Failed to fetch todo");
+            }
         },
         users: async () => {
-            // call to database
-            const users = await User.findAll()
-            // perform any operation 
-
-            return users
+            try {
+                const users = await User.findAll();
+                return users;
+            } catch (error) {
+                console.error("Error fetching users:", error);
+                throw new Error("Failed to fetch users");
+            }
         }
     },
     Mutation: {
         addTodo: async (root, args) => {
-            const newTodo = await Todo.create({
-                title: args.title,
-                description: args.description,
-                data: args.date,
-                complete: args.complete
-            })
-            return newTodo
+            try {
+                const newTodo = await Todo.create({
+                    title: args.title,
+                    description: args.description,
+                    date: args.date,
+                    complete: args.complete
+                });
+                return newTodo;
+            } catch (error) {
+                console.error("Error adding todo:", error);
+                throw new Error("Failed to add todo");
+            }
         },
         deleteTodo: async (root, args) => {
-            const newTodo = await Todo.destroy({
-                where: {
-                    id: args.id
-                }
-            })
-            return `${newTodo} deleted successfully`
+            try {
+                const deletedTodoCount = await Todo.destroy({
+                    where: { id: args.id }
+                });
+                if (deletedTodoCount === 0) throw new Error("Todo not found");
+                return `Todo with ID ${args.id} deleted successfully`;
+            } catch (error) {
+                console.error(`Error deleting todo with id ${args.id}:`, error);
+                throw new Error("Failed to delete todo");
+            }
         },
         updateTodo: async (root, args) => {
-            const { id, title, description, complete, date } = args
-            const findTodo = await Todo.findByPk(id)
-            // update todo values
-            if (title !== undefined) findTodo.title = title
-            if (description !== undefined) findTodo.description = description
-            if (date !== undefined) findTodo.date = date
-            if (complete !== undefined) findTodo.complete = complete
-            await findTodo.save()
+            const { id, title, description, complete, date } = args;
+            try {
+                const findTodo = await Todo.findByPk(id);
+                if (!findTodo) throw new Error("Todo not found");
 
-            return findTodo
-        },
+                // Update todo values
+                if (title !== undefined) findTodo.title = title;
+                if (description !== undefined) findTodo.description = description;
+                if (date !== undefined) findTodo.date = date;
+                if (complete !== undefined) findTodo.complete = complete;
+
+                await findTodo.save();
+                return findTodo;
+            } catch (error) {
+                console.error(`Error updating todo with id ${id}:`, error);
+                throw new Error("Failed to update todo");
+            }
+        }
     }
-}
+};
