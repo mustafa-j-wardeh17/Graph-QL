@@ -1,11 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 type AuthUser = {
+    id: number;
     fullName: string;
     email: string;
     picture: string;
-    password?: string;
-    googleId?: string;
 };
 interface AuthState {
     isAuthenticated: boolean;

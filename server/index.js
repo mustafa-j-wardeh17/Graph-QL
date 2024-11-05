@@ -12,10 +12,24 @@ import * as google_Auth from './auth/loginWithGoogle.js'
 
 dotenv.config()
 const app = express()
+
+
+//--------------------------------------
+//---------------Middleware-------------
+//--------------------------------------
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
+app.use(cors({
+    credentials: true,
+    methods: 'GET,POST,PATCH,DELETE',
+    maxAge
+        : 24 * 60 * 60 * 1000 //1 day,
+}))
 
-const port = process.env.PORT || 5017
+
+
+const port = process.env.PORT
 
 ////Graph QL
 let appolloServer;
@@ -25,7 +39,6 @@ async function startServer() {
         typeDefs,
         // resolvers
         resolvers
-
     })
 
     await appolloServer.start()
@@ -36,28 +49,6 @@ startServer()
 
 
 
-
-//--------------------------------------
-//-------------Cookie Parse-------------
-//--------------------------------------
-app.use(cookieParser())
-
-//--------------------------------------
-//-----------------CORS-----------------
-//--------------------------------------
-app.use(cors({
-    origin:"http://localhost:3000",
-    credentials: true,
-    methods: 'GET,POST,PATCH,DELETE',
-    maxAge
-    : 24 * 60 * 60 * 1000 //1 day,
-}))
-// Security Headers Middleware
-app.use((req, res, next) => {
-    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin'); // Adjust according to your needs
-    res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp'); // This may also be relevant
-    next();
-});
 
 
 //--------------------------------------

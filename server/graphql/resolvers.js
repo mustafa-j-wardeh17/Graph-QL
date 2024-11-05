@@ -1,3 +1,4 @@
+import { Todo } from "../models/todo.model.js";
 import { User } from "../models/User.model.js";
 
 const books = [
@@ -19,12 +20,27 @@ export const resolvers = {
             // perform any operation
             return books
         },
+        getTodos: async () => {
+            const todos = await Todo.findAll()
+            return todos
+        },
         users: async () => {
             // call to database
             const users = await User.findAll()
             // perform any operation 
 
             return users
+        }
+    },
+    Mutation: {
+        addTodo: async (root, args) => {
+            const newTodo = await Todo.create({
+                title: args.title,
+                description: args.description,
+                data: args.date,
+                complete: args.complete
+            })
+            return newTodo
         }
     }
 }
