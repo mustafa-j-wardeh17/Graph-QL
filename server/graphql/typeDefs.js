@@ -22,6 +22,7 @@ export const typeDefs = `#graphql
         books:[Book]
         users:[User]
         getTodos:[Todo]
+        getTodo(id:ID):Todo
     }
 
     type Mutation {

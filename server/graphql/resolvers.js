@@ -24,6 +24,10 @@ export const resolvers = {
             const todos = await Todo.findAll()
             return todos
         },
+        getTodo: async (root, args) => {
+            const todos = await Todo.findByPk(args.id)
+            return todos
+        },
         users: async () => {
             // call to database
             const users = await User.findAll()
