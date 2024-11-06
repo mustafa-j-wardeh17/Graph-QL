@@ -1,10 +1,11 @@
-import { gql } from "@apollo/client"
+import { gql, useQuery } from "@apollo/client"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "../../redux/store";
 import { setAuthUser, setIsAuthenticated } from "../../redux/auth/authSlice";
 import { useEffect } from "react";
 import TodoForm from "../components/TodoForm";
-
+import { GET_TODOS } from './../../graphql/Query'
+import { TodoCard } from "../components/TodoCard";
 export const GET_BOOKS = gql`
   query getBooks {
     books {
@@ -13,7 +14,12 @@ export const GET_BOOKS = gql`
   }
 `
 function App() {
+
+  const { loading, error, data } = useQuery(GET_TODOS)
+  console.log(data)
+
   const dispatch = useDispatch()
+
   const { authUser, isAuthenticated } = useSelector((state: RootState) => state.auth);
   useEffect(() => {
     if (!isAuthenticated) {
@@ -54,18 +60,13 @@ function App() {
       </button>
       <TodoForm />
       <div className="flex flex-wrap justify-center max-w-[700px] w-full gap-4 mt-[20px]">
+
         {
-          [1,2,3,4].map((item,idx)=>(
-            <div className="bg-green-500 flex flex-col gap-2 justify-between rounded-lg shadow-md shadow-gray-600 p-4 w-[300px] h-[180px]">
-              <h1 className="font-bold">Lorem ipsum dolor sit amet.</h1>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, repellendus!</p>
-              <div className="w-full flex gap-2 justify-end">
-                <button className="bg-blue-500 hover:bg-blue-400 rounded-md duration-200 p-1">edit</button>
-                <button className="bg-red-500 hover:bg-red-400 rounded-md duration-200 p-1">delete</button>
-              </div>
-            </div>
+          (data?.getTodos || []).map((item: any, idx: number) => (
+            <TodoCard key={idx} todo={item} />
           ))
         }
+
       </div>
 
     </div>
