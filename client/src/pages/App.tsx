@@ -42,7 +42,8 @@ function App() {
       console.log('user logout successfully')
     }
   }
-
+  if (loading) return <p>loading...</p>
+  if (error) return <p>Something went wrong while fetching todos</p>
   return (
     <div className="max-w-screen overflow-hidden min-h-screen text-white flex flex-col  items-center justify-center bg-neutral-800">
       <img
