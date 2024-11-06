@@ -19,7 +19,9 @@ export const resolvers = {
         },
         getTodos: async () => {
             try {
-                const todos = await Todo.findAll();
+                const todos = await Todo.findAll({
+                    
+                });
                 return todos;
             } catch (error) {
                 console.error("Error fetching todos:", error);

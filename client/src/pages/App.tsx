@@ -44,7 +44,7 @@ function App() {
   }
 
   return (
-    <div className="w-screen h-screen text-white flex flex-col  items-center justify-center bg-neutral-800">
+    <div className="max-w-screen overflow-hidden min-h-screen text-white flex flex-col  items-center justify-center bg-neutral-800">
       <img
         src={`${authUser?.picture}`}
         alt="profile picture"
