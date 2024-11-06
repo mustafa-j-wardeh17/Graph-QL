@@ -8,6 +8,8 @@ import Login from './pages/Login';
 import './index.css'
 import SuccessLogin from './pages/SuccessLogin';
 import { PersistGate } from 'redux-persist/integration/react';
+import { ApolloProvider } from '@apollo/client';
+import client from './../util/ApolloClients'
 const router = createBrowserRouter([
   {
     path: "/",
@@ -24,10 +26,12 @@ const router = createBrowserRouter([
 ]);
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Provider store={store}>
-      <PersistGate persistor={persistor}>
-        <RouterProvider router={router} />
-      </PersistGate>
-    </Provider>
+    <ApolloProvider client={client}>
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+          <RouterProvider router={router} />
+        </PersistGate>
+      </Provider>
+    </ApolloProvider>
   </StrictMode>,
 )

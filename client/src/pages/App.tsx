@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "../../redux/store";
 import { setAuthUser, setIsAuthenticated } from "../../redux/auth/authSlice";
 import { useEffect } from "react";
+import TodoForm from "../components/TodoForm";
 
 export const GET_BOOKS = gql`
   query getBooks {
@@ -51,6 +52,22 @@ function App() {
       >
         logout
       </button>
+      <TodoForm />
+      <div className="flex flex-wrap justify-center max-w-[700px] w-full gap-4 mt-[20px]">
+        {
+          [1,2,3,4].map((item,idx)=>(
+            <div className="bg-green-500 flex flex-col gap-2 justify-between rounded-lg shadow-md shadow-gray-600 p-4 w-[300px] h-[180px]">
+              <h1 className="font-bold">Lorem ipsum dolor sit amet.</h1>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, repellendus!</p>
+              <div className="w-full flex gap-2 justify-end">
+                <button className="bg-blue-500 hover:bg-blue-400 rounded-md duration-200 p-1">edit</button>
+                <button className="bg-red-500 hover:bg-red-400 rounded-md duration-200 p-1">delete</button>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+
     </div>
   )
 }

@@ -5,7 +5,6 @@ import cookieParser from "cookie-parser";
 import cors from 'cors'
 import { resolvers } from './graphql/resolvers.js'
 import { typeDefs } from './graphql/typeDefs.js'
-import { User } from './models/User.model.js'
 import authRouter from './Routes/auth.route.js'
 import passport from "passport";
 import * as google_Auth from './auth/loginWithGoogle.js'
@@ -21,6 +20,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(cors({
+    origin:'http://localhost:3000',
     credentials: true,
     methods: 'GET,POST,PATCH,DELETE',
     maxAge
