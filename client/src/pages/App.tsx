@@ -112,6 +112,7 @@ function App() {
         setShowForm={setShowForm}
         showForm={showForm}
         editData={editData}
+        setEditData={setEditData}
       />
     </div>
   )

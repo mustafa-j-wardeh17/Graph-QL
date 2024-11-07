@@ -5,10 +5,11 @@ import { GET_TODOS } from '../../graphql/Query';
 import { CgClose } from 'react-icons/cg';
 import { FormData } from '../pages/App';
 
-const TodoForm = ({ showForm, setShowForm, editData }: {
+const TodoForm = ({ showForm, setShowForm, editData, setEditData }: {
     showForm: boolean;
     setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
     editData: FormData | undefined;
+    setEditData: React.Dispatch<React.SetStateAction<FormData | undefined>>
 }) => {
 
     const [addTodo, { }] = useMutation(ADD_TODO, {
@@ -38,11 +39,21 @@ const TodoForm = ({ showForm, setShowForm, editData }: {
                 date: editData.date,
                 complete: editData.complete,
             });
+        } else {
+            setFormData({
+                title: '',
+                description: '',
+                date: new Date().toISOString().split('T')[0],
+                complete: false,
+            });
         }
     }, [editData]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        let { name, value } = e.target;
+        if (name === 'date') {
+            value = new Date(value).toISOString().split('T')[0]
+        }
         setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
 
@@ -93,7 +104,7 @@ const TodoForm = ({ showForm, setShowForm, editData }: {
                 <button
                     type="button"
                     className="absolute right-4 top-4"
-                    onClick={() => setShowForm(false)}
+                    onClick={() => { setShowForm(false); setEditData(undefined) }}
                 >
                     <CgClose />
                 </button>
@@ -122,7 +133,8 @@ const TodoForm = ({ showForm, setShowForm, editData }: {
                     <input
                         type="date"
                         name="date"
-                        value={editData?.date ? new Date(editData.date).toISOString().split('T')[0] : formData.date}
+                        //value={editData?.date ? new Date(editData.date).toISOString().split('T')[0] : formData.date}
+                        value={new Date(formData.date).toISOString().split('T')[0]}
                         onChange={handleChange}
                         className="px-2 py-2 rounded-md bg-transparent border-[1px] border-gray-500 focus:ring-0 focus:outline-0 text-white"
                     />

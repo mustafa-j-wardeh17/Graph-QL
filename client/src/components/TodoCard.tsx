@@ -17,7 +17,6 @@ export const TodoCard = ({ todo, setShowForm, setEditData }: {
     const handleUpdate = () => {
         setEditData(todo)
         setShowForm(true)
-        console.log(todo)
     };
     const handleDelete = async () => {
         try {
