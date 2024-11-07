@@ -12,13 +12,16 @@ export const GET_TODOS = gql`
 }
 `
 export const GET_SEARCH_TODOS = gql`
-  query getSearchTodos($search: String!) {
-    getSearchTodos(search: $search) {
-      id
-      title
-      description
-      complete
-      date
+  query getSearchTodos($search: String, $page:Number) {
+    getSearchTodos(search: $search, page:$page) {
+      todos{
+        id
+        title
+        description
+        complete
+        date
+      }
+      totalTodos
     }
   }
 `;

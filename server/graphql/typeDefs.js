@@ -4,6 +4,7 @@ export const typeDefs = `#graphql
         author: String
     }
     scalar Date
+    scalar Number
     type Todo {
         id:String
         title: String!
@@ -18,12 +19,16 @@ export const typeDefs = `#graphql
         googleId:String
         picture:String
     }
+    type SearchResult {
+        todos: [Todo]
+        totalTodos: Int
+    }
     type Query {
         books:[Book]
         users:[User]
         getTodos:[Todo]
         getTodo(id:ID!):Todo
-        getSearchTodos(search:String):[Todo]
+        getSearchTodos(search:String, page:Number):SearchResult
     }
 
     type Mutation {

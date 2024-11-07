@@ -9,6 +9,7 @@ import { TodoCard } from "../components/TodoCard";
 import { BiLogOut, BiPrinter } from "react-icons/bi";
 import { FaPlus } from "react-icons/fa";
 import { debounce } from 'lodash';  // For debouncing the search
+import Pagination from "../components/Pagination";
 
 export type FormData = {
   id?: number;
@@ -19,10 +20,11 @@ export type FormData = {
 };
 
 function App() {
+  const [page, setPage] = useState(1)
   const [search, setSearch] = useState('');
   const [searchTerm, setSearchTerm] = useState('');  // For debounced search
   const { loading, error, data, refetch } = useQuery(GET_SEARCH_TODOS, {
-    variables: { search: searchTerm },
+    variables: { search: searchTerm, page: page },
   });
   const [showForm, setShowForm] = useState<boolean>(false);
   const [editData, setEditData] = useState<FormData | undefined>();
@@ -56,11 +58,9 @@ function App() {
 
   const handleSearchChange = debounce((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value.trim());  // Trigger the debounced search
-  }, 500); 
-
+  }, 500);
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Something went wrong while fetching todos</p>;
-
   return (
     <div className="max-w-screen relative overflow-hidden min-h-screen text-white flex flex-col gap-6 bg-neutral-800">
       <div className="flex gap-2 justify-between items-center bg-neutral-900 py-2 px-4 shadow-md shadow-[#303030]">
@@ -103,7 +103,7 @@ function App() {
           <input
             type="text"
             value={search}
-            onChange={(e) => { setSearch(e.target.value); handleSearchChange(e); }}
+            onChange={(e) => { setPage(1); setSearch(e.target.value); handleSearchChange(e); }}
             className="p-2 bg-transparent text-neutral-400 focus:ring-0 focus:outline-none border-[1px] border-neutral-600 rounded-lg"
           />
         </div>
@@ -111,10 +111,10 @@ function App() {
         <div className="border-[1px] border-neutral-700" />
 
         <div className="flex flex-wrap justify-center w-full gap-4 mt-[20px]">
-          {data?.getSearchTodos.length === 0 ? (
+          {data?.getSearchTodos.todos.length === 0 ? (
             <p>No todos found for your search</p>
           ) : (
-            (data?.getSearchTodos || []).map((item: FormData, idx: number) => (
+            (data?.getSearchTodos.todos || []).map((item: FormData, idx: number) => (
               <TodoCard
                 key={idx}
                 todo={item}
@@ -125,6 +125,11 @@ function App() {
             ))
           )}
         </div>
+        <Pagination
+          page={page}
+          setPage={setPage}
+          totalPages={Math.ceil(data?.getSearchTodos?.totalTodos / 10) || 1}
+        />
       </div>
 
       <TodoForm

@@ -33,14 +33,21 @@ export const resolvers = {
             try {
                 // % any sequence of characters %
                 const searchTerm = `%${args.search}%`;
-
+                const totalTodos = await Todo.count({
+                    where: Sequelize.or(
+                        { title: { [Op.like]: searchTerm } },
+                        { description: { [Op.like]: searchTerm } }
+                    ),
+                })
                 const todos = await Todo.findAll({
                     where: Sequelize.or(
                         { title: { [Op.like]: searchTerm } },
                         { description: { [Op.like]: searchTerm } }
-                    )
+                    ),
+                    limit: 10,
+                    offset: (((args.page - 1) || 0) * 10)
                 });
-                return todos;
+                return { todos, totalTodos };
             } catch (error) {
                 console.error("Error fetching todos:", error);
                 throw new Error("Failed to fetch todos");
