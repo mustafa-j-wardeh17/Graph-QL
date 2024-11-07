@@ -1,24 +1,27 @@
-import { useMutation } from '@apollo/client';
+import { ApolloQueryResult, OperationVariables, useMutation } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 import { ADD_TODO, UPDATE_TODO } from '../../graphql/Mutation';
-import { GET_TODOS } from '../../graphql/Query';
 import { CgClose } from 'react-icons/cg';
 import { FormData } from '../pages/App';
 
-const TodoForm = ({ showForm, setShowForm, editData, setEditData }: {
+const TodoForm = ({ showForm, setShowForm, editData, setEditData,refetch }: {
     showForm: boolean;
     setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
     editData: FormData | undefined;
     setEditData: React.Dispatch<React.SetStateAction<FormData | undefined>>
+    refetch: (variables?: Partial<OperationVariables> | undefined) => Promise<ApolloQueryResult<any>>
 }) => {
 
-    const [addTodo, { }] = useMutation(ADD_TODO, {
+    const [addTodo] = useMutation(ADD_TODO, {
         onError: (error) => console.error("Error:", error),
-        refetchQueries: [{ query: GET_TODOS }],
-    });
-    const [updateTodo, { }] = useMutation(UPDATE_TODO, {
+        onCompleted: () => {
+            refetch(); // Manually refetch the query after mutation
+        },    });
+    const [updateTodo] = useMutation(UPDATE_TODO, {
         onError: (error) => console.error("Error:", error),
-        refetchQueries: [{ query: GET_TODOS }],
+        onCompleted: () => {
+            refetch(); 
+        },
     });
 
     const [formData, setFormData] = useState<FormData>({
@@ -29,7 +32,6 @@ const TodoForm = ({ showForm, setShowForm, editData, setEditData }: {
         complete: editData?.complete || false,
     });
 
-    // Sync formData with editData whenever editData changes
     useEffect(() => {
         if (editData && editData.id) {
             setFormData({
@@ -133,7 +135,6 @@ const TodoForm = ({ showForm, setShowForm, editData, setEditData }: {
                     <input
                         type="date"
                         name="date"
-                        //value={editData?.date ? new Date(editData.date).toISOString().split('T')[0] : formData.date}
                         value={new Date(formData.date).toISOString().split('T')[0]}
                         onChange={handleChange}
                         className="px-2 py-2 rounded-md bg-transparent border-[1px] border-gray-500 focus:ring-0 focus:outline-0 text-white"

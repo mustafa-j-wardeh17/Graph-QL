@@ -23,6 +23,7 @@ export const typeDefs = `#graphql
         users:[User]
         getTodos:[Todo]
         getTodo(id:ID!):Todo
+        getSearchTodos(search:String):[Todo]
     }
 
     type Mutation {

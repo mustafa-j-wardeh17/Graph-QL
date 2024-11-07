@@ -1,3 +1,4 @@
+import { Op, Sequelize } from "sequelize";
 import { Todo } from "../models/todo.model.js";
 import { User } from "../models/User.model.js";
 
@@ -20,7 +21,24 @@ export const resolvers = {
         getTodos: async () => {
             try {
                 const todos = await Todo.findAll({
-                    
+
+                });
+                return todos;
+            } catch (error) {
+                console.error("Error fetching todos:", error);
+                throw new Error("Failed to fetch todos");
+            }
+        },
+        getSearchTodos: async (root, args) => {
+            try {
+                // % any sequence of characters %
+                const searchTerm = `%${args.search}%`;
+
+                const todos = await Todo.findAll({
+                    where: Sequelize.or(
+                        { title: { [Op.like]: searchTerm } },
+                        { description: { [Op.like]: searchTerm } }
+                    )
                 });
                 return todos;
             } catch (error) {

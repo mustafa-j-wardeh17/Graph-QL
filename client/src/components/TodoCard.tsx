@@ -1,18 +1,21 @@
-import { useMutation } from "@apollo/client";
+import { ApolloQueryResult, OperationVariables, useMutation } from "@apollo/client";
 import { DELETE_TODO } from './../../graphql/Mutation'
-import { GET_TODOS } from "../../graphql/Query";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { FormData } from "../pages/App";
 
-export const TodoCard = ({ todo, setShowForm, setEditData }: {
+export const TodoCard = ({ todo, setShowForm, setEditData, refetch }: {
     todo: FormData;
     setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
     setEditData: React.Dispatch<React.SetStateAction<FormData | undefined>>,
+    refetch: (variables?: Partial<OperationVariables> | undefined) => Promise<ApolloQueryResult<any>>
 }) => {
     const [deleteTodo] = useMutation(DELETE_TODO, {
-        refetchQueries: [{ query: GET_TODOS }],
+        onCompleted: () => {
+            refetch(); 
+        },
         onError: (error) => console.error("Delete error:", error),
+
     })
     const handleUpdate = () => {
         setEditData(todo)
