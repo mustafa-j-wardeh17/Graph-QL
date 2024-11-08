@@ -46,7 +46,7 @@ To interact with the GraphQL server, we need to configure Apollo Client.
 
     const client = new ApolloClient({
       link: new HttpLink({
-        uri: 'http://localhost:4000/graphql', // URL of your Express GraphQL server
+        uri: 'http://localhost:5000/graphql', // URL of your Express GraphQL server
       }),
       cache: new InMemoryCache(),
     });
