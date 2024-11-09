@@ -4,23 +4,24 @@ import { ADD_TODO, UPDATE_TODO } from '../../graphql/Mutation';
 import { CgClose } from 'react-icons/cg';
 import { FormData } from '../pages/App';
 
-const TodoForm = ({ showForm, setShowForm, editData, setEditData,refetch }: {
+const TodoForm = ({ showForm, setShowForm, editData, setEditData, refetch }: {
     showForm: boolean;
     setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
     editData: FormData | undefined;
-    setEditData: React.Dispatch<React.SetStateAction<FormData | undefined>>
-    refetch: (variables?: Partial<OperationVariables> | undefined) => Promise<ApolloQueryResult<any>>
+    setEditData: React.Dispatch<React.SetStateAction<FormData | undefined>>;
+    refetch: (variables?: Partial<OperationVariables> | undefined) => Promise<ApolloQueryResult<any>>;
 }) => {
 
     const [addTodo] = useMutation(ADD_TODO, {
         onError: (error) => console.error("Error:", error),
         onCompleted: () => {
             refetch(); // Manually refetch the query after mutation
-        },    });
+        },
+    });
     const [updateTodo] = useMutation(UPDATE_TODO, {
         onError: (error) => console.error("Error:", error),
         onCompleted: () => {
-            refetch(); 
+            refetch();
         },
     });
 
@@ -52,11 +53,17 @@ const TodoForm = ({ showForm, setShowForm, editData, setEditData,refetch }: {
     }, [editData]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let { name, value } = e.target;
-        if (name === 'date') {
-            value = new Date(value).toISOString().split('T')[0]
+        let { name, value, type, checked } = e.target;
+
+        // Handle checkbox specifically
+        if (type === 'checkbox') {
+            setFormData((prevData) => ({ ...prevData, [name]: checked }));
+        } else {
+            if (name === 'date') {
+                value = new Date(value).toISOString().split('T')[0];
+            }
+            setFormData((prevData) => ({ ...prevData, [name]: value }));
         }
-        setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -79,11 +86,10 @@ const TodoForm = ({ showForm, setShowForm, editData, setEditData,refetch }: {
                         title: formData.title,
                         description: formData.description,
                         date: formData.date,
-                        complete: formData.complete,
+                        complete: formData.complete as boolean,
                     },
                 });
             }
-
 
             setFormData({
                 title: '',
@@ -106,7 +112,7 @@ const TodoForm = ({ showForm, setShowForm, editData, setEditData,refetch }: {
                 <button
                     type="button"
                     className="absolute right-4 top-4"
-                    onClick={() => { setShowForm(false); setEditData(undefined) }}
+                    onClick={() => { setShowForm(false); setEditData(undefined); }}
                 >
                     <CgClose />
                 </button>
@@ -140,17 +146,22 @@ const TodoForm = ({ showForm, setShowForm, editData, setEditData,refetch }: {
                         className="px-2 py-2 rounded-md bg-transparent border-[1px] border-gray-500 focus:ring-0 focus:outline-0 text-white"
                     />
                 </div>
-
+                <div className="flex items-center gap-2">
+                    <label className="font-bold text-lg">Complete</label>
+                    <input
+                        type="checkbox"
+                        name="complete"
+                        checked={formData.complete}
+                        onChange={handleChange}
+                        className="w-[20px] h-[20px] bg-red-500"
+                    />
+                </div>
                 <button
                     className="bg-blue-600 w-[120px] p-2 rounded-md transition-all duration-200 hover:bg-blue-400"
                     type="submit"
-                // disabled={loading}
                 >
                     Submit
-                    {/* {loading ? 'Submitting...' : 'Submit'} */}
                 </button>
-                {/* {error && <p className="text-red-500 mt-2">Error: {error.message}</p>} */}
-                {/* {data && <p className="text-green-500 mt-2">Todo added successfully!</p>} */}
             </form>
         </div>
     );
